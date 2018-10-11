@@ -1,0 +1,1 @@
+# appsync-emulator-serverless
