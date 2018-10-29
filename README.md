@@ -13,7 +13,7 @@ We aim to support the majority of appsync features (as we use all of them except
  - HTTP(S) source
  - NONE source
  - Full VTL support ($util) and compatibility with Java stdlib
- - Support for use with cognito credentials
+ - Support for `API_KEY` and `AMAZON_COGNITO_USER_POOLS` authentication
  - Subscriptions
 
 ## Usage
