@@ -34,10 +34,17 @@ const mockHttpEndpoints = ({
 
   httpMocks.forEach(mock => {
     const dataSource = dataSources.filter(d => d.name === mock.dataSource)[0];
-    nock(dataSource.config.endpoint)
-      .persist()
-      [mock.method](mock.path)
-      .reply((uri, requestBody) => reply(mock, uri, requestBody));
+
+    if (mock.function) {
+      // eslint-disable-next-line import/no-dynamic-require
+      const fn = require(path.join(cwd, mock.function));
+      fn({ nock, mock, dataSource });
+    } else {
+      nock(dataSource.config.endpoint)
+        .persist()
+        [mock.method](mock.path)
+        .reply((uri, requestBody) => reply(mock, uri, requestBody));
+    }
   });
 };
 
