@@ -8,8 +8,6 @@ const createServerCore = require('./serverCore');
 const log = require('logdown')('appsync-emulator:server');
 const { wrapSchema } = require('./schemaWrapper');
 
-const mockHttpEndpoints = require('./mockHttpEndpoints');
-
 const ensureDynamodbTables = async (
   dynamodb,
   serverlessConfig,
@@ -62,22 +60,12 @@ const createSchema = async ({
   }
 
   const graphqlSchema = wrapSchema(fs.readFileSync(schemaPath, 'utf8'));
-  const {
-    custom: { appSync: appSyncConfig, appSyncOffline: { httpMocks } = {} } = {},
-  } = serverlessConfig;
+  const { custom: { appSync: appSyncConfig } = {} } = serverlessConfig;
   const dynamodbTables = await ensureDynamodbTables(
     dynamodb,
     serverlessConfig,
     appSyncConfig,
   );
-
-  mockHttpEndpoints({
-    httpMocks,
-    serverlessDirectory,
-    dataSources: appSyncConfig.dataSources.filter(
-      dataSource => dataSource.type === 'HTTP',
-    ),
-  });
 
   return createSchemaCore({
     dynamodb,
